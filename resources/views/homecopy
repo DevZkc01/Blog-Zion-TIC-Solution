@@ -1,0 +1,105 @@
+@extends('layouts.master')
+
+@section('content')
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header" style="background-color:bisque;">
+                    <h2>{{ __('Publications') }}</h2>
+                </div>
+
+                <div class="card-body">
+
+                    @foreach($all_post as $posts)
+                    <div class="col-md-10 mx-auto mb-3 justify-content-center">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>{{ $posts->titre }}</h4>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="row d-flex">
+
+                                    <div class="col-md-11">
+
+                                        <div class="row">
+                                            <span class="text-left">
+                                                <b>
+                                                    Auteur : {{$posts->user->pseudo}}
+                                                </b>
+                                            </span>
+                                        </div>
+
+                                        <div class="row">
+                                            <span class="text-right">
+                                                <i>Publié le {{$posts->created_at}}</i>
+                                            </span>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-1">
+                                        <a href="{{route('profile.show',$posts->user->pseudo)}}">
+                                            <div
+                                                style="width:40px; height:40px;border-radius:50%; border:1px black solid; overflow:hidden;">
+                                                <img src="{{asset('storage/'.$posts->user->profile->image_profile)}}"
+                                                    alt="" srcset="">
+                                            </div>
+                                        </a>
+                                    </div>
+
+                                </div>
+
+                                @if($posts->image != null)
+                                <div class=" row mt-2 mb-2 text-center row">
+                                    <img src="{{asset('storage/'.$posts->image)}}" style="height:80vh;" alt=""
+                                        srcset="">
+                                </div>
+                                @endif
+
+                                <div class=" row mb-2 mt-2">
+                                    {{$posts->description}}
+                                </div>
+
+                                <div class="row text-center justify-content-center align-text-center">
+
+                                    <div class="col-4">
+                                        <a href="#" class="text-decoration-none" style="color:red;">
+                                            1000 <i class="fa fa-heart"></i>
+                                        </a>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <a href="{{route('post.show',$posts->id)}}" class="text-decoration-none">
+                                            300 <i class="fa fa-comment"></i>
+                                        </a>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <a href="{{route('post.show',$posts->id)}}" class="text-decoration-none">
+                                            100 <i class="fa fa-share"></i>
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    @endforeach
+
+                    <div class="text-center mx-auto justify-content-center">
+                        {{ $all_post->links('vendor.pagination.bootstrap-5')}}
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@endsection

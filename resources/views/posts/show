@@ -1,0 +1,170 @@
+@extends('layouts.master')
+
+@section('content')
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+
+            <div class="card-body">
+                <div class="col-md-10 mx-auto mb-3 justify-content-center">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>{{ $post->titre }}</h4>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="row d-flex">
+
+                                <div class="col-md-11">
+
+                                    <div class="row">
+                                        <span class="text-left">
+                                            <b>
+                                                Auteur : {{$post->user->pseudo}}
+                                            </b>
+                                        </span>
+                                    </div>
+
+                                    <div class="row">
+                                        <span class="text-right">
+                                            <i>Publié le {{$post->created_at}}</i>
+                                        </span>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-1">
+                                    <a href="{{route('profile.show',$post->user->pseudo)}}">
+                                        <div
+                                            style="width:40px; height:40px;border-radius:50%; border:1px black solid; overflow:hidden;">
+                                            <img src="{{asset('storage/'.$post->user->profile->image_profile)}}" alt=""
+                                                srcset="">
+                                        </div>
+                                    </a>
+                                </div>
+
+                            </div>
+
+                            @if($post->image != null)
+                            <div class=" row mt-2 mb-2 text-center justify-content-center">
+                                <img src="{{asset('storage/'.$post->image)}}" alt="" style="height:50vh;width:50vh"
+                                    srcset="">
+                            </div>
+                            @endif
+
+                            <div class="row mb-2 mt-2 ">
+                                <div class="col-md-12">
+                                    {{$post->description}}
+                                </div>
+                            </div>
+
+                            <div class="row text-center justify-content-center align-text-center">
+
+                                <div class="col-4">
+                                    <a href="#" class="text-decoration-none" style="color:red;">
+                                        1000 <i class="fa fa-heart"></i>
+                                    </a>
+                                </div>
+
+                                <div class="col-4">
+                                    <a href="{{route('post.show',$post->id)}}" class="text-decoration-none">
+                                        <b>{{ $post->commentaires->count()}}</b> <i class="fa fa-comment"></i>
+                                    </a>
+                                </div>
+
+                                <div class="col-4">
+                                    <a href="{{route('post.show',$post->id)}}" class="text-decoration-none">
+                                        100 <i class="fa fa-share"></i>
+                                    </a>
+                                </div>
+
+                            </div>
+
+                            @if(auth()->user()->id==$post->user_id)
+                            <hr style="width:100%;">
+                            @endif
+                            <div class="row mt-2">
+                                <div class="col-md-6 text-start">
+                                    @can('update',$post)
+                                    <a class="btn btn-outline-warning" href="{{ route('post.edit',$post)}}">Editer</a>
+                                    @endcan
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    @can('delete',$post)
+                                    <a class="btn btn-outline-danger"
+                                        href="{{ route('post.delete',$post)}}}">Retirer</a>
+                                    @endcan
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <form action="{{route('commentaire.store',$post)}}" method="POST">
+                        @csrf
+                        <div class="row d-flex mt-4 mb-3">
+
+                            <div class="row">
+                                <h6>Votre commentaire</h6>
+                            </div>
+
+                            <div class="col-md-8">
+                                <textarea id="commentaire" type="text"
+                                    class="form-control @error('commentaire') is-invalid @enderror" name="commentaire"
+                                    required autocomplete="commentaire" autofocus>{{ old('commentaire') }}</textarea>
+
+                                @error('commentaire')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-outline-primary">Répondre</button>
+                            </div>
+                        </div>
+
+                    </form>
+
+                    <hr style="width:100%; height:2px;">
+
+
+
+                    <div class="row d-flex mt-4 mb-3">
+
+                        <div class="row">
+                            <h5>Commentaires {{ $post->commentaires->count()}} <i class="text-muted">posté</i></h5>
+                        </div>
+
+                        <div class="col-md-8">
+                            @foreach($post->commentaires as $posts)
+                            <hr style="width:100%;">
+                            <div class="row  mb-3">
+                                <div class="col-12 d-flex" style="background-color:bisque;">
+                                    <div class="col-6 text-start d-flex">
+                                        <span><img src="{{ asset('storage/'.$posts->user->profile->image)}}"
+                                                alt=""></span><span><b>{{$posts->user->pseudo}}</b></span>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <span class="small"> {{$posts->created_at}} </span>
+                                    </div>
+                                </div>
+
+                                <p>{{$posts->commentaire}}</p>
+                            </div>
+
+                            @endforeach
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+@endsection
